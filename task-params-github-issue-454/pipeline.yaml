@@ -5,7 +5,7 @@ resources:
 - name: aptomi-concourse-pipelines
   type: git
   source:
-    uri: (https://github.com/Aptomi/concourse-pipelines.git
+    uri: https://github.com/Aptomi/concourse-pipelines.git
 
 jobs:
 
