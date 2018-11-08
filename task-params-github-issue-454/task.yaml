@@ -2,7 +2,7 @@
 
 platform: linux
 image_resource:
-  type: docker-image
+  type: registry-image
   source:
     repository: ((image))
 inputs:
@@ -11,6 +11,6 @@ run:
   path: bash
   args:
     - "-c"
-    - "ls -l && echo ((image)) && echo $ENV_VAR"
+    - "ls -l && echo param->((image)) && echo env->$ENV_VAR && echo extra->((param))"
 params:
   ENV_VAR: ((image))

@@ -2,18 +2,36 @@
 
 resources:
 
-- name: aptomi-concourse-pipelines
-  type: git
-  source:
-    uri: https://github.com/Aptomi/concourse-pipelines.git
+  - name: aptomi-concourse-pipelines
+    type: git
+    source:
+      uri: https://github.com/Aptomi/concourse-pipelines.git
 
 jobs:
 
-- name: test
-  plan:
-  - get: aptomi-concourse-pipelines
+  - name: test
+    plan:
+      - get: aptomi-concourse-pipelines
 
-  - task: external-task
-    file: aptomi-concourse-pipelines/task-params-github-issue-454/task.yaml
-    vars:
-      image: ((image))
+      - task: embedded-task
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: ((image))
+          inputs:
+            - name: aptomi-concourse-pipelines
+          run:
+            path: bash
+            args:
+              - "-c"
+              - "ls -l && echo param->((image)) && echo env->$ENV_VAR && echo extra->((param))"
+          params:
+            ENV_VAR: ((image))
+
+      - task: external-task
+        file: aptomi-concourse-pipelines/task-params-github-issue-454/task.yaml
+        vars:
+          image: ((image))
+          param: ((param))
