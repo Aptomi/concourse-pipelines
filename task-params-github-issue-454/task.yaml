@@ -11,6 +11,6 @@ run:
   path: bash
   args:
     - "-c"
-    - "ls -l && echo param->((image)) && echo env->$ENV_VAR && echo extra->((param))"
+    - "ls -l && echo param-((image)) && echo env-$ENV_VAR && echo extra-((param))"
 params:
   ENV_VAR: ((image))

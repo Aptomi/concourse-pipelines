@@ -1,2 +1,2 @@
-image: busybox
+image: aptomi/ctest
 param: hello
