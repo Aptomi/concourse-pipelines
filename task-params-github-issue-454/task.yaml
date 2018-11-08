@@ -1,0 +1,16 @@
+---
+
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: ((image))
+inputs:
+  - name: aptomi-concourse-pipelines
+run:
+  path: bash
+  args:
+    - "-c"
+    - "ls -l && echo ((image)) && echo $ENV_VAR"
+params:
+  ENV_VAR: ((image))
