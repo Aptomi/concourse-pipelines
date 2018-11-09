@@ -31,7 +31,7 @@ jobs:
       - put: helm
         params:
           chart: ((chart))
-          namespace: ((namespace))
+          namespace: ((namespace))-dev
           release: ((release))
           version: ((chart-version))
           values:
@@ -55,7 +55,7 @@ jobs:
       - put: helm
         params:
           chart: ((chart))
-          namespace: ((namespace))
+          namespace: ((namespace))-staging
           release: ((release))
           version: ((chart-version))
           values:
@@ -79,7 +79,7 @@ jobs:
       - put: helm
         params:
           chart: ((chart))
-          namespace: ((namespace))
+          namespace: ((namespace))-prod
           release: ((release))
           version: ((chart-version))
           values:
