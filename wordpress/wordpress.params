@@ -1,0 +1,6 @@
+chart: stable/wordpress
+chart-version: 3.3.0
+release: wordpress
+namespace: sampledemo
+repo: https://github.com/Aptomi/concourse-pipelines.git
+values-path: wordpress/wordpress.values

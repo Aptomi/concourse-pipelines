@@ -1,0 +1,39 @@
+---
+resource_types:
+
+  - name: helm
+    type: docker-image
+    source:
+      repository: aptomi/concourse-helm-resource
+
+resources:
+
+  - name: helm
+    type: helm
+    source:
+      kubeconfig: ((kubeconfig)) # will be taken from from Vault
+
+  - name: config-git
+    type: git
+    source:
+      uri: ((repo))
+      paths:
+        - ((values-path))
+
+jobs:
+
+  - name: deploy_((chart))
+    serial: true
+    plan:
+      - get: config-git
+        trigger: true
+
+      - put: helm
+        params:
+          chart: ((chart))
+          namespace: ((namespace))
+          release: ((release))
+          version: ((chart-version))
+          values:
+            - config-git/((values-path))
+          wait_until_ready: 600
