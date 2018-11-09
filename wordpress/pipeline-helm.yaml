@@ -22,7 +22,7 @@ resources:
 
 jobs:
 
-  - name: deploy_((chart))
+  - name: deploy_((release))
     serial: true
     plan:
       - get: config-git
