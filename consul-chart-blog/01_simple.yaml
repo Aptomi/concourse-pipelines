@@ -1,0 +1,34 @@
+---
+
+resource_types:
+
+  - name: chartmuseum
+    type: registry-image
+    source:
+      repository: cathive/concourse-chartmuseum-resource
+      tag: 0.5.0
+
+resources:
+
+  - name: chartmuseum
+    type: chartmuseum
+    source:
+      chart_name: ((chart-name))
+      server_url: ((chartmuseum-url))
+
+  - name: ((chart-name))
+    type: git
+    source:
+      uri: ((chart-git-repo))
+
+jobs:
+
+  - name: publish-upstream-chart-into-chartmuseum
+    plan:
+      - get: ((chart-name))
+        trigger: true
+
+      - put: chartmuseum
+        params:
+          chart: ((chart-name))
+          force: true

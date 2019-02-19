@@ -1,0 +1,4 @@
+chartmuseum-url: SET-TO-YOUR-CHARTMUSEUM-INSTANCE
+slack-webhook: SET-TO-YOUR-SLACK-WEBHOOK-URL
+chart-name: consul
+chart-git-repo: https://github.com/hashicorp/consul-helm.git

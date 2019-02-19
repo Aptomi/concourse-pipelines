@@ -1,0 +1,55 @@
+---
+
+resources:
+
+  - name: chartmuseum
+    type: chartmuseum
+    source:
+      chart_name: ((chart-name))
+      server_url: ((chartmuseum-url))
+
+  - name: ((chart-name))
+    type: git
+    source:
+      uri: ((chart-git-repo))
+
+  - name: slack-alert
+    type: slack-notification
+    source:
+      url: ((slack-webhook))
+
+resource_types:
+
+  - name: chartmuseum
+    type: registry-image
+    source:
+      repository: cathive/concourse-chartmuseum-resource
+      tag: 0.5.0
+
+  - name: slack-notification
+    type: registry-image
+    source:
+      repository: cfcommunity/slack-notification-resource
+      tag: v1.4.2
+
+jobs:
+
+  - name: publish-upstream-chart-into-chartmuseum
+    plan:
+      - get: ((chart-name))
+        trigger: true
+
+      - put: chartmuseum
+        params:
+          chart: ((chart-name))
+          force: true
+
+        on_failure:
+          do:
+            - put: slack-alert
+              params:
+                text: Failed to publish ((chart-name)) chart to ChartMuseum. See $ATC_EXTERNAL_URL/builds/$BUILD_ID
+
+      - put: slack-alert
+        params:
+          text: Successfully published ((chart-name)) chart to ChartMuseum. See $ATC_EXTERNAL_URL/builds/$BUILD_ID
