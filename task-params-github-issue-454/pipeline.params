@@ -1,2 +1,2 @@
-image: aptomi/ctest
+image: frolvlad/alpine-bash
 param: hello
