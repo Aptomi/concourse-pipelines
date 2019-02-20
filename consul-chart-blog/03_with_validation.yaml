@@ -1,0 +1,82 @@
+---
+
+resources:
+
+  - name: chartmuseum
+    type: chartmuseum
+    source:
+      chart_name: ((chart-name))
+      server_url: ((chartmuseum-url))
+
+  - name: ((chart-name))
+    type: git
+    source:
+      uri: ((chart-git-repo))
+
+  - name: slack-alert
+    type: slack-notification
+    source:
+      url: ((slack-webhook))
+
+resource_types:
+
+  - name: chartmuseum
+    type: registry-image
+    source:
+      repository: cathive/concourse-chartmuseum-resource
+      tag: 0.5.0
+
+  - name: slack-notification
+    type: registry-image
+    source:
+      repository: cfcommunity/slack-notification-resource
+      tag: v1.4.2
+
+jobs:
+
+  - name: validate-chart
+    plan:
+      - get: ((chart-name))
+        trigger: true
+
+      - task: validate-chart
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: dtzar/helm-kubectl
+          run:
+            path: bash
+            args:
+              - -c
+              - helm lint ./((chart-name))
+          inputs:
+            - name: ((chart-name))
+
+        on_failure:
+          do:
+            - put: slack-alert
+              params:
+                text: Failed to publish ((chart-name)) chart to ChartMuseum. See $ATC_EXTERNAL_URL/builds/$BUILD_ID
+
+  - name: publish-chart
+    plan:
+      - get: ((chart-name))
+        passed: [validate-chart]
+        trigger: true
+
+      - put: chartmuseum
+        params:
+          chart: ((chart-name))
+          force: true
+
+        on_failure:
+          do:
+            - put: slack-alert
+              params:
+                text: Failed to publish ((chart-name)) chart to ChartMuseum. See $ATC_EXTERNAL_URL/builds/$BUILD_ID
+
+      - put: slack-alert
+        params:
+          text: Successfully published ((chart-name)) chart to ChartMuseum. See $ATC_EXTERNAL_URL/builds/$BUILD_ID
