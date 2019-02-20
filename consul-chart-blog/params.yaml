@@ -3,3 +3,7 @@ chartmuseum-url: SET-TO-YOUR-CHARTMUSEUM-INSTANCE
 slack-webhook: SET-TO-YOUR-SLACK-WEBHOOK-URL
 chart-name: consul
 chart-git-repo: https://github.com/hashicorp/consul-helm.git
+
+# parameters for part #2 blog post
+tasks-git-repo: https://github.com/Aptomi/concourse-pipelines.git
+tasks-path: consul-chart-blog/tasks
