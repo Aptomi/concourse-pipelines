@@ -1,0 +1,16 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: ((image))
+run:
+  path: bash
+  args:
+    - -c
+    - |
+      echo "Verifying Helm chart from directory '((chart-name))' using image '((image))'"
+      ls -l ./((chart-name))
+      helm lint ./((chart-name))
+inputs:
+  - name: ((chart-name))

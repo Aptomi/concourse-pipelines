@@ -1,3 +1,4 @@
+# parameters for part #1 blog post
 chartmuseum-url: SET-TO-YOUR-CHARTMUSEUM-INSTANCE
 slack-webhook: SET-TO-YOUR-SLACK-WEBHOOK-URL
 chart-name: consul
