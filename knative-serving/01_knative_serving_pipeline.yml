@@ -1,0 +1,29 @@
+jobs:
+  - name: knative serving application
+    plan:
+      - get: serverless-image
+        trigger: true
+
+      - params:
+          kubectl: cluster-info
+          app_name: rest-api
+          image: aptomi/rest-api
+          namespace: default
+        put: knative-serving
+
+resource_types:
+  - name: knative-serving
+    source:
+      repository: aptomisvc/concourse-knative-serving-resource
+      tag: latest
+    type: docker-image
+
+resources:
+  - name: knative-serving
+    source:
+      kubeconfig: ((kubeconfig))
+    type: knative-serving
+  - name: serverless-image
+    source:
+      repository: aptomi/rest-api
+      tag: latest
