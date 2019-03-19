@@ -1,9 +1,8 @@
 jobs:
-  - name: knative serving application
+  - name: rest-api
     plan:
-      - get: serverless-image
+      - get: docker-image
         trigger: true
-
       - params:
           kubectl: cluster-info
           app_name: rest-api
@@ -23,7 +22,8 @@ resources:
     source:
       kubeconfig: ((kubeconfig))
     type: knative-serving
-  - name: serverless-image
+  - name: docker-image
     source:
       repository: aptomi/rest-api
       tag: latest
+    type: docker-image
