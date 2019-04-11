@@ -1,0 +1,39 @@
+---
+resource_types:
+
+  - name: helm
+    type: docker-image
+    source:
+      repository: aptomi/concourse-helm-resource
+
+resources:
+
+  - name: helm
+    type: helm
+    source:
+      kubeconfig: ((kubeconfig)) # will be taken from from Vault
+
+  - name: config-git
+    type: git
+    source:
+      uri: https://github.com/Aptomi/concourse-pipelines.git
+      paths:
+        - deployment-to-k8s/wordpress.values
+
+jobs:
+
+  - name: deploy_wordpress
+    serial: true
+    plan:
+      - get: config-git
+        trigger: true
+
+      - put: helm
+        params:
+          chart: stable/wordpress
+          namespace: meetup-demo
+          release: wordpress
+          version: 3.3.0
+          values:
+            - config-git/deployment-to-k8s/wordpress.values
+          wait_until_ready: 600
