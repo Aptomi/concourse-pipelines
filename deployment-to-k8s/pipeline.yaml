@@ -8,17 +8,17 @@ resource_types:
 
 resources:
 
-  - name: helm
-    type: helm
-    source:
-      kubeconfig: ((kubeconfig)) # will be taken from from Vault
-
   - name: config-git
     type: git
     source:
       uri: https://github.com/Aptomi/concourse-pipelines.git
       paths:
         - deployment-to-k8s/wordpress.values
+
+  - name: helm
+    type: helm
+    source:
+      kubeconfig: ((kubeconfig)) # will be taken from from Vault
 
 jobs:
 
